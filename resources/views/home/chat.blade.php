@@ -69,38 +69,20 @@
                         <div class="order_box">
                             <h2 class="mb-4">Chat Kamu</h2>
                             <button onclick="reloadPage()" class="btn btn-primary mb-3">
-                                <i class="fas fa-sync-alt"></i> <!-- Icon refresh -->
+                                <i class="fas fa-sync-alt"></i> <!-- Refresh Icon -->
                             </button>
                             <div id="chat-box" class="chat-container">
-                                <!-- Contoh pesan -->
-                                @foreach ($msg as $item)
-                                    @if ($item->isAdmin)
-                                        <div class="chat-box admin-chat">
-                                            {{ $item->msg }}
-                                            <span class="chat-time">{{ $item->date }}</span>
-                                        </div>
-                                    @else
-                                        <div class="chat-box user-chat">
-                                            {{ $item->msg }}
-                                            <span class="chat-time">{{ $item->date }}</span>
-                                        </div>
-                                    @endif
-                                @endforeach
-
-
-                                <!-- Akhir contoh pesan -->
+                                <!-- Container to display messages -->
                             </div>
                             @auth
-                                <form id="chat-form" class="chat-form" action="{{ route('chat.post', Auth::user()->id) }}"
-                                    method="POST">
-                                    @csrf <!-- Token CSRF untuk keamanan form Laravel -->
+                                <form id="chat-form" class="chat-form" action="{{ route('chat.post', Auth::user()->id) }}" method="POST">
+                                    @csrf <!-- CSRF Token -->
                                     <div class="form-group">
                                         <textarea class="form-control" id="message" name="msg" placeholder="Ketik pesan Anda..." rows="3"></textarea>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+                                    <button type="submit" class="btn btn-primary" id="send-message">Kirim Pesan</button>
                                 </form>
                             @endauth
-
                         </div>
                     </div>
                 </div>
@@ -109,8 +91,60 @@
     </section>
     <script>
         function reloadPage() {
-            location.reload(); // Memuat ulang halaman saat ini
+            location.reload(); // Reload the current page
         }
+
+        function fetchMessages() {
+            fetch('/chat-user')
+                .then(response => response.json())
+                .then(data => {
+                    const chatBox = document.getElementById('chat-box');
+                    chatBox.innerHTML = ''; // Clear the chat-box content before adding new messages
+                    data.forEach(message => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('chat-box');
+                        if (message.isAdmin) {
+                            messageDiv.classList.add('admin-chat');
+                        } else {
+                            messageDiv.classList.add('user-chat');
+                        }
+                        messageDiv.textContent = message.msg;
+                        const chatTime = document.createElement('span');
+                        chatTime.classList.add('chat-time');
+                        chatTime.textContent = message.date;
+                        messageDiv.appendChild(chatTime);
+                        chatBox.appendChild(messageDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        }
+
+        // Load messages when the page is initially loaded
+        fetchMessages();
+
+        // Reload messages every 5 seconds
+        setInterval(fetchMessages, 1000);
+
+        document.getElementById('chat-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(this); // Collect form data
+            const userId = {{ Auth::user()->id }}; // Get the ID of the logged-in user
+            formData.append('user_id', userId); // Add the user ID to the form data
+
+            fetch('{{ route('chat.post', Auth::user()->id) }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent:', data);
+                // Fetch and display messages after sending a new message
+                fetchMessages();
+                document.getElementById('message').value = '';
+            })
+            .catch(error => console.error('Error sending message:', error));
+        });
     </script>
 
     <!--================End Checkout Area =================-->

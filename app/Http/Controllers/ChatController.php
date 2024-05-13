@@ -14,17 +14,29 @@ class ChatController extends Controller
 {
     public function chat()
     {
+        return view('home.chat');
+    }
+
+    public function chat_user()
+    {
         $user = Auth::user();
         $messages = Message::where('user_id', $user->id)
             ->orWhere('customer_id', $user->customer->id)
-            ->orderBy('date', 'asc') // Mengurutkan berdasarkan tanggal, secara descending (dari yang paling terlama)
+            ->orderBy('date', 'asc')
             ->get();
 
+        return response()->json($messages);
+    }
 
-        $data = [
-            'msg' => $messages
-        ];
-        return view('home.chat', $data);
+    public function chat_user_id($id)
+    {
+        $user = User::find($id);
+        $messages = Message::where('user_id', $user->id)
+            ->orWhere('customer_id', $user->customer->id)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        return response()->json($messages);
     }
 
     public function getConversation($userId)
@@ -76,8 +88,9 @@ class ChatController extends Controller
             'date' => Carbon::now('Asia/Makassar')
         ]);
 
-
-        return redirect()->back();
+        // Jika menggunakan Ajax, kembalikan respons dalam format JSON
+        return response()->json(['message' => 'Pesan berhasil dikirim'], 200);
     }
+
 
 }

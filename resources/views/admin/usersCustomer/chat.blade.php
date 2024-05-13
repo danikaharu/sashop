@@ -114,7 +114,7 @@
 
 
                     <div class="col-md-8 chat-column">
-                        <div id="chat-box">
+                        <div id="chat-box-detail" >
                             <!-- Konten chat akan dimuat di sini -->
                         </div>
                     </div>
@@ -139,7 +139,7 @@
                 url: 'detail/' + userId,
                 success: function(response) {
                     // Memperbarui konten di sebelah kanan dengan detail peserta yang baru
-                    $('#chat-box').html(response);
+                    $('#chat-box-detail').html(response);
                     // Set lastClickedUserId ke userId yang baru saja di-klik
                     lastClickedUserId = userId;
                 },

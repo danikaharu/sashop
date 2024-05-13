@@ -11,6 +11,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailsTransactionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PromoController;
+use App\Http\Controllers\PusherController;
 use App\Http\Controllers\subcategoryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
@@ -67,6 +68,9 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/chat', [ChatController::class, 'chat'])->name('chat');
+    Route::get('/chat-user', [ChatController::class, 'chat_user'])->name('chat');
+    Route::get('/chat-user/{id}', [ChatController::class, 'chat_user_id'])->name('chat.id');
+
 
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('user.create');

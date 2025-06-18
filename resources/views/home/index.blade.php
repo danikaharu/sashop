@@ -9,7 +9,7 @@
                         <p class="sub text-uppercase" style="color: rgb(101, 219, 4)">SKIN HEALTH</p>
                         <h3 style="color: rgb(0, 0, 0)"><span>Tampil</span> Dengan <br />Persona <span>Alami</span></h3>
                         <h4 style="color: rgb(87, 87, 87)">Fowl saw dry which a above together place.</h4>
-                        <a class="main_btn mt-40" href="#">View Collection</a>
+                        <a class=" mt-40" href="{{ route('home.index') }}">View Collection</a>
                     </div>
                 </div>
             </div>
@@ -17,264 +17,327 @@
     </section>
     <!--================End Home Banner Area =================-->
 
-    {{-- <!-- Start feature Area -->
-    <section class="feature-area section_gap_bottom_custom">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="single-feature">
-                        <a href="#" class="title">
-                            <i class="flaticon-money"></i>
-                            <h3>Money back gurantee</h3>
-                        </a>
-                        <p>Shall open divide a one</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="single-feature">
-                        <a href="#" class="title">
-                            <i class="flaticon-truck"></i>
-                            <h3>Free Delivery</h3>
-                        </a>
-                        <p>Shall open divide a one</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="single-feature">
-                        <a href="#" class="title">
-                            <i class="flaticon-support"></i>
-                            <h3>Alway support</h3>
-                        </a>
-                        <p>Shall open divide a one</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="single-feature">
-                        <a href="#" class="title">
-                            <i class="flaticon-blockchain"></i>
-                            <h3>Secure payment</h3>
-                        </a>
-                        <p>Shall open divide a one</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End feature Area --> --}}
-
-    <!--================ Feature Product Area =================-->
-    <section class="feature_product_area section_gap_bottom_custom">
+    <!--================ New Product Section =================-->
+    <section class="new_product_area mb-40">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="main_title">
-                        <h2><span>Produk Terbaru</span></h2>
-                        <p>Lihat untuk perawatan kulitmu!</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                @foreach ($products as $p )
-                    <div class="col-lg-4 col-md-6">
-                    <div class="single-product">
-                        <div class="product-img">
-                            <img class="img-fluid w-100" src="{{ 'storage/'.$p->productpictures[0]->url }}" alt="" />
-                            <div class="p_icon">
-                                <a href="#">
-                                    <i class="ti-eye"></i>
+                <div class="col-lg-12 text-center">
+                    <div class="new_product_content">
+                        <h3 class="text-uppercase mb-40">Produk Baru</h3>
+                        <div class="new-products d-flex justify-content-center gap-3">
+                            @foreach ($products as $product)
+                                <a href="{{ route('showProducts', ['id' => $product->id]) }}"
+                                    class="single-new-product-link">
+                                    <div class="single-new-product">
+                                        <span class="new-product-label">New Product</span>
+                                        <div class="product-image">
+                                            <img src="{{ $product->productpictures->isNotEmpty() ? 'storage/' . $product->productpictures->first()?->url : asset('asset/logoFic.jpg') }}"
+                                                alt="{{ $product->productname }}">
+                                        </div>
+                                        <h5 class="product-name mt-3">{{ $product->productname }}</h5>
+                                    </div>
                                 </a>
-                                <a href="#">
-                                    <i class="ti-heart"></i>
-                                </a>
-                                <a href="#">
-                                    <i class="ti-shopping-cart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="product-btm">
-                            <a href="{{ route('showProducts', ['id' => $p->id]) }}" class="d-block">
-                                <h4><strong>{{ $p->productname }}</strong></h4>
-                            </a>
-                            <div class="mt-3">
-                                <span class="mr-4">Rp. {{ number_format($p->price) }}</span>
-                                {{-- <del>$35.00</del> --}}
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
-                @endforeach
-                
             </div>
         </div>
     </section>
-    <!--================ End Feature Product Area =================-->
+    <!--================ End New Product Section =================-->
 
-    <!--================ Offer Area =================-->
+
+    <!--================ Promo Product Slider =================-->
     <section class="offer_area">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="offset-lg-4 col-lg-6 text-center">
+                <div class="col-lg-12 text-center">
                     <div class="offer_content">
-                        <h3 class="text-uppercase mb-40">PROMO PRODUCT</h3>
-                        @foreach ($productsPromo as $promo )    
-                        <h2 class="text-uppercase">{{ $promo->promo[0]->promo_discount }}%</h2>
-                        <p>Limited Time Offer</p>
-                        <a href="{{ route('home.promo') }}" class="main_btn mb-20 mt-5">Discover Now</a>
+                        <h3 class="text-uppercase mb-40">PROMO PRODUCTS</h3>
+                        <div class="promo-slider-wrapper">
+                            <div id="promo-slider" class="promo-slider">
+                                @foreach ($productsPromo as $product)
+                                    <div class="single-promo text-center p-3">
+                                        @foreach ($product->promo as $discount)
+                                            <div class="promo-discount mb-3">
+                                                <h2 class="text-uppercase">{{ $discount->promo_discount }}%</h2>
+                                            </div>
+                                        @endforeach
+                                        <p class="mb-3">Limited Time Offer</p>
+                                        <a href="{{ route('home.promo') }}" class="main_btn mb-20 mt-5">Discover Now</a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="slider-controls">
+                            <button id="prev-slide">&#10094;</button>
+                            <button id="next-slide">&#10095;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================ End Promo Product Slider =================-->
+
+    <!--================ Recommended Products =================-->
+    <section class="recommended_product_area mb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-12 text-center">
+                    <h3 class="text-uppercase mb-40">Rekomendasi Untukmu</h3>
+                    <div class="row justify-content-center">
+                        @foreach ($recommendedProducts as $product)
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                <div class="single-new-product">
+                                    <div class="product-image">
+                                        <img src="{{ $product->productpictures->first() ? asset('storage/' . $product->productpictures->first()->url) : asset('asset/logoFic.jpg') }}"
+                                            alt="{{ $product->productname }}">
+                                    </div>
+                                    <h5 class="product-name mt-3">{{ Str::limit($product->productname, 40) }}</h5>
+                                    <a href="{{ route('showProducts', ['id' => $product->id]) }}"
+                                        class="main_btn mt-3">Lihat Produk</a>
+                                </div>
+                            </div>
                         @endforeach
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!--================ End Offer Area =================-->
+    <!--================ End Recommended Products =================-->
 
-    <!--================ New Product Area =================-->
-    <section class="new_product_area section_gap_top section_gap_bottom_custom">
-        <div class="container">
-            {{-- <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="main_title">
-                        <h2><span>Product Baru</span></h2>
-                        <p>Lihat Semua Untuk Perawatan Kulitmu!</p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="new_product">
-                        <h5 class="text-uppercase">collection of 2019</h5>
-                        <h3 class="text-uppercase">Men’s summer t-shirt</h3>
-                        <div class="product-img">
-                            <img class="img-fluid" src="img/product/new-product/new-product1.png" alt="" />
-                        </div>
-                        <h4>$120.70</h4>
-                        <a href="#" class="main_btn">Add to cart</a>
-                    </div>
-                </div>
+    <!-- CSS untuk styling slider dan kontrol -->
+    <style>
+        /* Styling untuk section produk baru */
+        .new_product_area {
+            padding: 60px 0;
+            background: #ffffff;
+        }
 
-                <div class="col-lg-6 mt-5 mt-lg-0">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <div class="single-product">
-                                <div class="product-img">
-                                    <img class="img-fluid w-100" src="img/product/new-product/n1.jpg" alt="" />
-                                    <div class="p_icon">
-                                        <a href="#">
-                                            <i class="ti-eye"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="ti-heart"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="ti-shopping-cart"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="product-btm">
-                                    <a href="#" class="d-block">
-                                        <h4>Nike latest sneaker</h4>
-                                    </a>
-                                    <div class="mt-3">
-                                        <span class="mr-4">$25.00</span>
-                                        <del>$35.00</del>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .new_product_content h3 {
+            font-size: 1.8em;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
 
-                        <div class="col-lg-6 col-md-6">
-                            <div class="single-product">
-                                <div class="product-img">
-                                    <img class="img-fluid w-100" src="img/product/new-product/n2.jpg" alt="" />
-                                    <div class="p_icon">
-                                        <a href="#">
-                                            <i class="ti-eye"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="ti-heart"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="ti-shopping-cart"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="product-btm">
-                                    <a href="#" class="d-block">
-                                        <h4>Men’s denim jeans</h4>
-                                    </a>
-                                    <div class="mt-3">
-                                        <span class="mr-4">$25.00</span>
-                                        <del>$35.00</del>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .new-products {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
 
-                        <div class="col-lg-6 col-md-6">
-                            <div class="single-product">
-                                <div class="product-img">
-                                    <img class="img-fluid w-100" src="img/product/new-product/n3.jpg" alt="" />
-                                    <div class="p_icon">
-                                        <a href="#">
-                                            <i class="ti-eye"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="ti-heart"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="ti-shopping-cart"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="product-btm">
-                                    <a href="#" class="d-block">
-                                        <h4>quartz hand watch</h4>
-                                    </a>
-                                    <div class="mt-3">
-                                        <span class="mr-4">$25.00</span>
-                                        <del>$35.00</del>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .single-new-product {
+            width: 200px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
 
-                        <div class="col-lg-6 col-md-6">
-                            <div class="single-product">
-                                <div class="product-img">
-                                    <img class="img-fluid w-100" src="img/product/new-product/n4.jpg" alt="" />
-                                    <div class="p_icon">
-                                        <a href="#">
-                                            <i class="ti-eye"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="ti-heart"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="ti-shopping-cart"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="product-btm">
-                                    <a href="#" class="d-block">
-                                        <h4>adidas sport shoe</h4>
-                                    </a>
-                                    <div class="mt-3">
-                                        <span class="mr-4">$25.00</span>
-                                        <del>$35.00</del>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-    </section>
-    <!--================ End New Product Area =================-->
+        .single-new-product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
 
-   
+        .new-product-label {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #82ae46;
+            color: #ffffff;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+            border-radius: 12px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-name {
+            font-size: 1em;
+            font-weight: 600;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        /* Styling dasar untuk offer area */
+        .offer_area {
+            padding: 60px 0;
+            background: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .promo-slider-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .promo-slider {
+            display: flex;
+            transition: transform 0.4s ease-in-out;
+            gap: 20px;
+            will-change: transform;
+        }
+
+        .single-promo {
+            flex: 0 0 260px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .single-promo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .promo-discount h2 {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .limited-offer {
+            font-size: 1em;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .main_btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #82ae46;
+            color: white;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: background 0.3s ease;
+            margin-top: auto;
+            width: 100%;
+            max-width: 160px;
+        }
+
+        .main_btn:hover {
+            background: #6f9339;
+            text-decoration: none;
+        }
+
+        .slider-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .slider-controls button {
+            background: transparent;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .slider-controls button:hover {
+            color: #82ae46;
+        }
+
+        .recommended_product_area {
+            background-color: #f9f9f9;
+            padding: 50px 0;
+        }
+
+        .recommended_product_area h3 {
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        .recommended_product_area .single-new-product {
+            transition: transform 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .recommended_product_area .single-new-product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const slider = document.querySelector("#promo-slider");
+            const slides = document.querySelectorAll(".single-promo");
+            const slideCount = slides.length;
+            const visibleSlides = 3; // Jumlah slide yang ditampilkan sekaligus
+            let currentIndex = 0;
+
+            // Animasi Zoom In-Out untuk box promo
+            function animateSlide() {
+                slides.forEach((slide, index) => {
+                    slide.style.transition = "transform 0.5s ease, box-shadow 0.5s ease";
+                    slide.style.transform = "scale(1)"; // Reset ukuran slide
+                    slide.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.1)";
+                });
+
+                const activeSlide = slides[currentIndex];
+                activeSlide.style.transform = "scale(1.05)"; // Membesar sedikit
+                activeSlide.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
+            }
+
+            // Fungsi untuk berpindah ke slide sebelumnya
+            document.querySelector("#prev-slide").addEventListener("click", function() {
+                currentIndex = (currentIndex <= 0) ? slideCount - visibleSlides : currentIndex - 1;
+                updateSlider();
+                animateSlide();
+            });
+
+            // Fungsi untuk berpindah ke slide berikutnya
+            document.querySelector("#next-slide").addEventListener("click", function() {
+                currentIndex = (currentIndex >= slideCount - visibleSlides) ? 0 : currentIndex + 1;
+                updateSlider();
+                animateSlide();
+            });
+
+            // Fungsi untuk memperbarui posisi slider
+            function updateSlider() {
+                const slideWidth = slides[0].offsetWidth + 20; // Menyesuaikan dengan margin antar slide
+                slider.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+            }
+
+            // Auto-slide setiap 3 detik dengan animasi zoom in-out
+            setInterval(function() {
+                document.querySelector("#next-slide").click();
+            }, 3000); // Ubah interval sesuai kebutuhan
+
+            // Memanggil animasi pertama kali saat halaman dimuat
+            animateSlide();
+        });
+    </script>
 @endsection

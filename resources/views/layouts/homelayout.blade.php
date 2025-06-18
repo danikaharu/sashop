@@ -22,15 +22,27 @@
     <link rel="stylesheet" href="{{ asset('lp/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('lp/css/responsive.css') }}" />
 
-    
+    <!-- Slick Carousel CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    {{-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+    @stack('style')
+
 </head>
 
 <body>
-    
+
     @include('layouts.navhome')
 
     @yield('content')
-   
+
     <!--================ start footer Area  =================-->
     <footer class="footer-area section_gap">
         <div class="container">
@@ -129,6 +141,8 @@
     <script src="{{ asset('lp/vendors/counter-up/jquery.counterup.js') }}"></script>
     <script src="{{ asset('lp/js/mail-script.js') }}"></script>
     <script src="{{ asset('lp/js/theme.js') }}"></script>
+
+    @stack('script')
 </body>
 
 </html>

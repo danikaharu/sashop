@@ -93,11 +93,16 @@ class SubcategoryController extends Controller
     public function destroy($id)
     {
         $subcategories = Subcategory::with('category')->find($id);
-        
-        $subcategories->delete();
-
-        Session()->flash('success', 'Subcategory berhasil dihapus!');
-
+        if ($subcategories->product->isEmpty()) {
+            # code...
+            $subcategories->delete();
+    
+            Session()->flash('success', 'Subcategory berhasil dihapus!');
+    
+            return redirect()->route('subcategory.index');
+        }
+        Session()->flash('errors', 'Subcategory ini telah dipakai pada suatu produk!');
+    
         return redirect()->route('subcategory.index');
 
     }

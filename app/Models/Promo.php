@@ -11,7 +11,7 @@ class Promo extends Model
 
     protected $fillable = ['product_id','promo_discount','startdate','enddate'];
 
-    public function product() 
+    public function product()
      {
         return $this->belongsTo(Product::class);
     }

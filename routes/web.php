@@ -10,13 +10,14 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailsTransactionController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PointController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\PusherController;
-use App\Http\Controllers\subcategoryController;
+use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
-use App\Models\Cart;
-use App\Models\Promo;
+use App\Mail\BirthdayGreetingMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -34,12 +35,12 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 // Route::get('/', [DashboardController::class, 'index'])->name('index.dashboard');
 
-Route::get('/',[HomeController::class,'landingpage'])->name('landingpage');
+Route::get('/', [HomeController::class, 'landingpage'])->name('landingpage');
 
-Route::get('/login', [AuthController::class,'login'])->name('login');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin'])->name('doLogin');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/register',[AuthController::class, 'register'])->name('register');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register/do', [AuthController::class, 'doRegis'])->name('doRegis');
 
 
@@ -49,6 +50,8 @@ Route::get('/productView/{id}', [HomeController::class, 'showProducts'])->name('
 
 Route::get('/addProductsToCart', [CartController::class, 'noLogin'])->name('noLogin');
 Route::get('/carts', [CartController::class, 'carts'])->name('carts');
+// Route::delete('/carts/delete/{id}', [CartController::class, 'destroy'])->name('carts.destroy');
+Route::get('/carts/delete/{id}', [CartController::class, 'hapusCart'])->name('hapusCart');
 
 
 Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
@@ -61,13 +64,16 @@ Route::get('/details/{id}', [DetailsTransactionController::class, 'show'])->name
 Route::post('/details', [DetailsTransactionController::class, 'store'])->name('detailsOrder.store');
 
 
+// TRANSAKSI MIDTRANS
+Route::get('/detail/{id}', [DetailsTransactionController::class, 'paymentSuccess'])->name('paymentSuccess');
 
 
 
-Route::middleware('auth')->group(function(){
+
+Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-    Route::get('/chat', [ChatController::class, 'chat'])->name('chat');
+    Route::get('/chat', [ChatController::class, 'chat'])->name('chatTampil');
     Route::get('/chat-user', [ChatController::class, 'chat_user'])->name('chat');
     Route::get('/chat-user/{id}', [ChatController::class, 'chat_user_id'])->name('chat.id');
 
@@ -121,17 +127,20 @@ Route::middleware('auth')->group(function(){
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 
 
+
     Route::get('/promos', [PromoController::class, 'index'])->name('promo.index');
     Route::get('/promos/create', [PromoController::class, 'create'])->name('promo.create');
     Route::post('/promos', [PromoController::class, 'getProdNoProm'])->name('promo.store');
-    Route::get('/promos/{id}/edit', [PromoController::class, 'edit'])->name('promo.edit');
-    Route::put('/promos/{id}', [PromoController::class, 'update'])->name('promo.update');
-    Route::delete('/promos/{id}', [PromoController::class, 'destroy'])->name('promo.destroy');
+    Route::get('/promos/{promo}/edit', [PromoController::class, 'edit'])->name('promo.edit');
+    Route::put('/promos/{promo}', [PromoController::class, 'update'])->name('promo.update');
+    Route::delete('/promos/{promo}', [PromoController::class, 'destroy'])->name('promo.destroy');
 
-    Route::get('/products-no-promo',[PromoController::class, 'getProdNoProm'])->name('getProdNoProm');
+
+    Route::get('/products-no-promo', [PromoController::class, 'getProdNoProm'])->name('getProdNoProm');
 
     Route::get('/orders', [TransactionController::class, 'index'])->name('order.index');
     Route::get('/orders/done', [TransactionController::class, 'indexDone'])->name('orderDone.index');
+    Route::get('/orders/report', [TransactionController::class, 'indexReport'])->name('orderReport.index');
     Route::post('/orders/update', [TransactionController::class, 'updateStatus'])->name('updateStatus');
     Route::get('/orders/{id}', [TransactionController::class, 'show'])->name('order.show');
     Route::post('/orders/{id}', [TransactionController::class, 'store'])->name('order.store');
@@ -141,12 +150,11 @@ Route::middleware('auth')->group(function(){
     Route::post('/chat/{id}', [ChatController::class, 'submit'])->name('chat.post');
     Route::get('admin/detail/{userId}', [ChatController::class, 'getConversation'])->name('chat.conversation');
 
+
+    // EDIT BIODATA
+    Route::get('/biodata/{customer}/edit', [HomeController::class, 'editBiodata'])->name('biodata.edit');
+    Route::put('/biodata/{customer}', [HomeController::class, 'updateBiodata'])->name('biodata.update');
+
+    // POINT
+    Route::resource('points', PointController::class);
 });
-
-
-
-
-
-
-
-

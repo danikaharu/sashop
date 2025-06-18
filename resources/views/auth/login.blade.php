@@ -93,7 +93,7 @@
 <body>
     <div id="particles-js"></div>
     <div class="login-container" id="loginContainer">
-        <img src="asset/mirashop.png" alt="Logo" class="img-fluid logo-img">
+        <img src="asset/logoFic.jpg" alt="Logo" class="img-fluid logo-img">
         <h2>Login</h2>
         <form action="{{ route('doLogin') }}" method="POST">
             @csrf

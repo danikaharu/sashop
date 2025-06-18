@@ -10,7 +10,11 @@ class Customer extends Model
     use HasFactory;
 
 
-    protected $fillable = ['user_id','phone','address'];
+    protected $fillable = ['user_id', 'phone', 'birth_date', 'address'];
+
+    protected $casts = [
+        'birth_date' => 'date',
+    ];
 
 
     public function user()
@@ -21,5 +25,10 @@ class Customer extends Model
     public function cart()
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function point()
+    {
+        return $this->hasOne(Point::class)->withDefault(['points' => 0]);
     }
 }

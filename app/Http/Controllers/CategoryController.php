@@ -75,12 +75,19 @@ class CategoryController extends Controller
 
     public function destroy($id)
     {
-        $category = Category::find($id);
+        $category = Category::findOrFail($id);
+        // dd($category->subcategory->isEmpty());
 
-        $category->delete();
+        if ($category->subcategory->isEmpty()) {
+            $category->delete();
 
-        session()->flash('success', 'Categories berhasil dihapus!');
+            session()->flash('success', 'Categories berhasil dihapus!');
 
+            return redirect()->route('category.index');
+            
+        }
+
+        session()->flash('errors', 'Kategori ini tidak dapat dihapus!');
         return redirect()->route('category.index');
     }
 

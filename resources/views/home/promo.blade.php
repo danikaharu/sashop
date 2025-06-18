@@ -41,38 +41,61 @@
 
                     <div class="latest_product_inner">
                         <div class="row">
-                            @foreach ($productDiscount as $product )     
-                            <div class="col-lg-4 col-md-6">
-                                <div class="single-product">
-                                    <div class="product-img">
-                                        <img class="card-img" src="{{ '/storage/'.$product->productpictures[0]->url }}"
-                                        alt="" />
-                                        <div class="p_icon">
-                                            <a href="#">
-                                                <i class="ti-eye"></i>
-                                            </a>
-                                            <a href="#">
-                                                <i class="ti-heart"></i>
-                                            </a>
-                                            <a href="#">
-                                                <i class="ti-shopping-cart"></i>
-                                            </a>
+                            @foreach ($productDiscount as $product)
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="single-product"
+                                        style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                                        <div class="product-img" style="height: 200px; overflow: hidden;">
+                                            @if (!$product->productpictures->isEmpty())
+                                                <img src="{{ '/storage/' . $product->productpictures[0]->url }}"
+                                                    alt="" style="height: 100%; width: 100%; object-fit: cover;">
+                                            @else
+                                                <img src="{{ asset('storage/images-product/default.png') }}" alt=""
+                                                    style="height: 100%; width: 100%; object-fit: cover;">
+                                            @endif
                                         </div>
-                                    </div>
-                                    <div class="product-btm">
-                                        <a href="{{ route('showProducts', ['id' => $product->id]) }}" class="d-block">
-                                            <h4>{{ $product->productname }}</h4>
-                                        </a>
-                                        <div class="mt-3">
-                                            <span class="mr-4">Rp. {{ $product->discountprice }}</span>
-                                            <del>Rp. {{ $product->price }}</del>
+                                        <div class="product-btm">
+                                            <a href="{{ route('showProducts', ['id' => $product->id]) }}" class="d-block">
+                                                <h4><strong>{{ $product->productname }}</strong></h4>
+                                            </a>
+                                            <div class="mt-3"
+                                                style="display: flex; flex-direction: column; align-items: flex-start;">
+                                                @if (isset($product->promo) && !$product->promo->isEmpty())
+                                                    @php
+                                                        // Hitung persentase diskon
+                                                        $discount_percentage = round(
+                                                            (($product->price - $product->discountprice) /
+                                                                $product->price) *
+                                                                100,
+                                                        );
+                                                    @endphp
+
+                                                    <!-- Harga dengan diskon -->
+                                                    <div style="display: flex; align-items: baseline;">
+                                                        <span
+                                                            style="font-size: 0.9em; color: grey; text-decoration: line-through; margin-right: 8px;">
+                                                            Rp. {{ number_format($product->price, 0, ',', '.') }}
+                                                        </span>
+                                                        <span style="color: green; font-size: 0.85em;">
+                                                            ({{ $discount_percentage }}% OFF)
+                                                        </span>
+                                                    </div>
+
+                                                    <div
+                                                        style="font-weight: bold; font-size: 1.2em; color: #000; margin-top: 5px;">
+                                                        Rp. {{ number_format($product->discountprice, 0, ',', '.') }}
+                                                    </div>
+                                                @else
+                                                    <!-- Harga tanpa diskon -->
+                                                    <span style="font-size: 1.1em; font-weight: bold;">
+                                                        Rp. {{ number_format($product->price, 0, ',', '.') }}
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             @endforeach
-
-                           
                         </div>
                     </div>
                 </div>
@@ -81,14 +104,28 @@
                     <div class="left_sidebar_area">
                         <aside class="left_widgets p_filter_widgets">
                             <div class="l_w_title">
+                                <h3>Cari Produk</h3>
+                            </div>
+                            <div class="widgets_inner">
+                                <form action="{{ route('home.index') }}" method="GET" class="d-flex" style="gap: 5px;">
+                                    <input type="text" name="q" class="form-control form-control-sm"
+                                        placeholder="Cari produk..." value="{{ request('q') }}">
+                                    <button type="submit" class="btn btn-sm btn-success">Cari</button>
+                                </form>
+                            </div>
+                        </aside>
+
+                        <aside class="left_widgets p_filter_widgets">
+                            <div class="l_w_title">
                                 <h3>Kategori</h3>
                             </div>
                             <div class="widgets_inner">
                                 <ul class="list">
-                                    @foreach ($categories as $category )     
-                                    <li>
-                                        <a href="{{ route('home.index', ['category_id'=>$category->id]) }}">{{ $category->name }}</a>
-                                    </li>
+                                    @foreach ($categories as $category)
+                                        <li>
+                                            <a
+                                                href="{{ route('home.index', ['category_id' => $category->id]) }}">{{ $category->name }}</a>
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -100,31 +137,16 @@
                             </div>
                             <div class="widgets_inner">
                                 <ul class="list">
-                                    @foreach ($subcategories as $subcategory )    
-                                    <li>
-                                        <a href="{{ route('home.index', ['subcategory_id'=>$subcategory->id]) }}">{{ $subcategory->category->name }} | {{ $subcategory->name }}</a>
-                                    </li>
+                                    @foreach ($subcategories as $subcategory)
+                                        <li>
+                                            <a href="{{ route('home.index', ['subcategory_id' => $subcategory->id]) }}">
+                                                {{ $subcategory->category->name }} | {{ $subcategory->name }}
+                                            </a>
+                                        </li>
                                     @endforeach
-                                    
                                 </ul>
                             </div>
                         </aside>
-
-
-                        {{-- <aside class="left_widgets p_filter_widgets">
-                            <div class="l_w_title">
-                                <h3>Price Filter</h3>
-                            </div>
-                            <div class="widgets_inner">
-                                <div class="range_item">
-                                    <div id="slider-range"></div>
-                                    <div class="">
-                                        <label for="amount">Price : </label>
-                                        <input type="text" id="amount" readonly />
-                                    </div>
-                                </div>
-                            </div>
-                        </aside> --}}
                     </div>
                 </div>
             </div>

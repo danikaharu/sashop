@@ -5,43 +5,41 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    
-    public function index() 
+
+    public function index()
     {
-        $dataPelaggan = Customer::count();
+        $dataPelanggan = Customer::count();
         $products = Product::count();
-        $transactions = Transaction::count(); //semua
-        $OrderDone = Transaction::whereRelation('evidencepayment', 'status', true)->count(); //berhasil
-        $OrderIn = Transaction::WhereRelation('evidencepayment','status', null)->count(); //diproses
-        $OrderDecline = Transaction::with(['evidencepayment' => function ($builder) { //ditolak
-            $builder->latest();
-        }])->get();
-        
-        $num = 0;
-        foreach($OrderDecline as $dec){
-            if(!$dec->evidencepayment[0]->status){
-                $num++;
-            }
-        }
+        $transactions = Transaction::count(); // Semua transaksi
 
-        // dd($num);
-        
+        $orderDone = Transaction::whereRelation('evidencepayment', 'status', true)->count(); // Berhasil
+        $orderIn = Transaction::whereRelation('evidencepayment', 'status', null)->count(); // Diproses
 
+        // Transaksi dengan status pembayaran ditolak (false)
+        $orderDecline = Transaction::whereHas('evidencepayment', function ($query) {
+            $query->latest()->where('status', false);
+        })->count();
+
+        // Ambil customer yang ulang tahun hari ini
+        $today = Carbon::now();
+        $birthdayCustomers = Customer::whereMonth('birth_date', $today->month)
+            ->whereDay('birth_date', $today->day)
+            ->with('user')
+            ->get();
 
         return view('admin.dashboard.index', [
-            'dataPelanggan' => $dataPelaggan,
+            'dataPelanggan' => $dataPelanggan,
             'products' => $products,
             'transaction' => $transactions,
-            'orderDone' => $OrderDone,
-            'orderIn' => $OrderIn,
-            'orderDecline' => $num
-
+            'orderDone' => $orderDone,
+            'orderIn' => $orderIn,
+            'orderDecline' => $orderDecline,
+            'birthdayCustomers' => $birthdayCustomers, // ← kirim ke blade
         ]);
     }
-
-
 }

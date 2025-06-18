@@ -56,18 +56,22 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ (new \Carbon\Carbon($d->created_at))->format('d F Y') }}</td>
                                                 <td>{{ $d->numinvoice }}</td>
-                                                <td>Rp. {{ number_format($d->totalPrice,0) }}</td>
+                                                <td>Rp. {{ number_format($d->totalPrice, 0) }}</td>
                                                 <td>
-                                                    @if($d->status == 'Belum Bayar')
+                                                    @if ($d->status == 'Belum Bayar')
                                                         <span class="badge badge-warning">Belum Bayar</span>
-                                                        @else
-                                                        <span class="badge badge-success">Sudah Bayar</span>
+                                                    @elseif($d->status == 'Diproses')
+                                                        <span class="badge badge-info">Cek Bukti</span>
+                                                    @elseif($d->status == 'Berhasil')
+                                                        <span class="badge badge-success">Berhasil</span>
+                                                    @else
+                                                        <span class="badge badge-danger">Ditolak</span>
                                                     @endif
                                                     {{-- {{ $d->status }}</td> --}}
                                                 <td>
-                                                    <a href="{{ route('order.show',$d->id)  }}"
-                                                        class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-pen"></i> Edit
+                                                    <a href="{{ route('order.show', $d->id) }}"
+                                                        class="btn btn-warning btn-sm">
+                                                        <i class="fas fa-eye"></i> Lihat
                                                     </a>
                                                 </td>
                                             </tr>

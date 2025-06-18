@@ -181,24 +181,28 @@ class ProductController extends Controller
 
         $product = Product::with(['productpictures','promo'])->find($id);
 
-        
-        foreach ($product->productpictures as $image) {
+        if ($product->detailtransaction->isEmpty()) {
+            foreach ($product->productpictures as $image) {
 
-            $imagePath = $image->url;
-
-            if (Storage::disk('public')->exists($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
+                $imagePath = $image->url;
+    
+                if (Storage::disk('public')->exists($imagePath)) {
+                    Storage::disk('public')->delete($imagePath);
+                }
+    
+                $image->delete();
             }
-
-            $image->delete();
+    
+            foreach($product->promo as $promo) {
+                $promo->delete();
+            }
+            $product->delete();
+    
+            return redirect()->route('product.index')->with('success','Data di Hapus');
         }
 
-        foreach($product->promo as $promo) {
-            $promo->delete();
-        }
-        $product->delete();
-
-        return redirect()->route('product.index')->with('success','Data di Hapus');
+        return redirect()->route('product.index')->with('errors','Produk telah ada transaksi');
+        
     }
     
 

@@ -114,7 +114,13 @@ class PromoController extends Controller
      */
     public function edit(Promo $promo)
     {
+        // Mendapatkan semua produk untuk pilihan produk dalam promo
+        $products = Product::with('productpictures')->latest()->get();
 
+        return view('admin.promos.editForm', [
+            'promo' => $promo,
+            'products' => $products
+        ]);
     }
 
     /**
@@ -122,7 +128,23 @@ class PromoController extends Controller
      */
     public function update(Request $request, Promo $promo)
     {
-        //
+        // Validasi data yang masuk
+        $validatedData = $request->validate([
+            'product_id' => ['required', 'exists:products,id'],
+            'discount' => ['required', 'numeric', 'min:0', 'max:100'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date']
+        ]);
+
+        // Update data promo
+        $promo->update([
+            'product_id' => $validatedData['product_id'],
+            'promo_discount' => $validatedData['discount'],
+            'startdate' => $validatedData['start_date'],
+            'enddate' => $validatedData['end_date']
+        ]);
+
+        return redirect()->route('promo.index')->with('success', 'Data Promo berhasil diperbarui');
     }
 
     /**
@@ -130,7 +152,8 @@ class PromoController extends Controller
      */
     public function destroy(Promo $promo)
     {
-        Promo::findOrFail($promo)->delete();
-        return redirect()->route('promo.index')->with('success','Data Promo berhasil dihapus');
+        // dd($promo->all());
+        $promo->delete();
+        return redirect()->route('promo.index')->with('success', 'Data Promo berhasil dihapus');
     }
 }

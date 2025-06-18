@@ -79,14 +79,18 @@ class UserController extends Controller
 
         $validator = $request->validate([
             'name' => ['required', 'string'],
-            'email' => ['email', 'required'],
+            'email' => ['required', 'email'],
             'password' => ['required', 'min:8']
         ]);
 
+        // Enkripsi password menggunakan bcrypt
+        $validator['password'] = bcrypt($validator['password']);
+
         $user->update($validator);
 
-        return redirect()->route('user.index')->with('success', 'User Diupdate!');
+        return redirect()->route('user.index')->with('success', 'User berhasil diupdate!');
     }
+
 
     public function destroy($id)
     {

@@ -20,6 +20,7 @@
     <!--================End Home Banner Area =================-->
 
     <!--================Cart Area =================-->
+    <!--================Cart Area =================-->
     <section class="cart_area">
         <div class="container">
             <div class="cart_inner">
@@ -27,6 +28,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th scope="col">#</th>
                                 <th scope="col">Product</th>
                                 <th scope="col">Price</th>
                                 <th scope="col">Quantity</th>
@@ -37,9 +39,11 @@
                             @foreach ($carts as $c)
                                 <tr>
                                     <td>
+                                        <a href="{{ route('hapusCart', $c->id) }}" class="btn btn-danger">Hapus</a>
+                                    </td>
+                                    <td>
                                         <div class="media">
-                                            <div class="d-flex" style="width: 10%">
-
+                                            <div class="d-flex" style="width: 30%">
                                                 <img src="{{ '/storage/' . $c->product->productpictures[0]->url }}"
                                                     width="100%" alt="" />
                                             </div>
@@ -72,32 +76,24 @@
                                     <td>
                                         <h5 id="total-price_{{ $c->product->id }}">Rp. 0</h5>
                                     </td>
+                                    
                                 </tr>
                             @endforeach
 
-
-
-                            <tr class="bottom_button">
-                                <td>
-                                    <a class="gray_btn" href="#">Cart Item</a>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                </td>
-                            </tr>
                             <tr>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                                 <td>
-                                    <h5>Subtotal</h5>
+                                    <h5>Grand Total</h5>
                                 </td>
                                 <td>
-                                    <h5 id="subtotal">Rp. 0</h5>
+                                    <h5 id="grand-total">Rp. 0</h5>
                                 </td>
                             </tr>
 
                             <tr class="out_button_area">
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -116,12 +112,14 @@
         </div>
     </section>
     <!--================End Cart Area =================-->
+
+    <!--================End Cart Area =================-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         let quantities = {};
         let prices = {};
-        let subtotal = 0;
+        let grandTotal = 0;
 
         @foreach ($carts as $c)
             quantities[{{ $c->product->id }}] = 1;
@@ -132,14 +130,14 @@
         function increaseQuantity(productId, productPrice) {
             quantities[productId]++;
             updateTotalPrice(productId, productPrice);
-            updateSubtotal();
+            updateGrandTotal();
         }
 
         function decreaseQuantity(productId, productPrice) {
             if (quantities[productId] > 1) {
                 quantities[productId]--;
                 updateTotalPrice(productId, productPrice);
-                updateSubtotal();
+                updateGrandTotal();
             }
         }
 
@@ -153,23 +151,25 @@
             });
             document.getElementById('total-price_' + productId).textContent = formattedTotalPrice;
             document.getElementById('sst_' + productId).value = quantities[productId];
-            document.getElementById('product_qty_' + productId).value = quantities[
-            productId]; // Perbarui nilai input tersembunyi
+            document.getElementById('product_qty_' + productId).value = quantities[productId]; // Update hidden input
         }
 
-        function updateSubtotal() {
-            subtotal = 0;
+        function updateGrandTotal() {
+            grandTotal = 0;
             for (const productId in quantities) {
                 const totalPrice = quantities[productId] * prices[productId];
-                subtotal += totalPrice;
+                grandTotal += totalPrice;
             }
-            const formattedSubtotal = subtotal.toLocaleString('id-ID', {
+            const formattedGrandTotal = grandTotal.toLocaleString('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             });
-            document.getElementById('subtotal').textContent = formattedSubtotal;
+            document.getElementById('grand-total').textContent = formattedGrandTotal;
         }
+
+        // Panggil fungsi untuk mengatur grand total pertama kali saat halaman dimuat
+        updateGrandTotal();
     </script>
 @endsection

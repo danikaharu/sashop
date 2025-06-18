@@ -95,18 +95,56 @@
                             <div class="card-header">
                                 <h3 class="card-title">
                                     <i class="fas fa-bullhorn"></i>
-                                    Selamat Datang Admin!
+                                    Selamat Datang!
                                 </h3>
                             </div>
 
                             <div class="card-body">
                                 <div class="callout callout-info">
-                                    <h5>Halo! <strong>{{ Auth::user()->name; }}</strong> </h5>
+                                    <h5>Halo! <strong>{{ Auth::user()->name }}</strong> </h5>
                                     <p>Buat Pelangganmu senang ya!😍😍</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h3 class="card-title mb-0">
+                                    🎉 Pelanggan Ulang Tahun Hari Ini
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                @if ($birthdayCustomers->isEmpty())
+                                    <div class="alert alert-info mb-0" role="alert">
+                                        Tidak ada pelanggan yang berulang tahun hari ini.
+                                    </div>
+                                @else
+                                    <div class="row">
+                                        @foreach ($birthdayCustomers as $customer)
+                                            <div class="col-12 mb-3">
+                                                <div class="card border-left-success shadow-sm">
+                                                    <div
+                                                        class="card-body d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <h5 class="mb-0">{{ $customer->user->name }}</h5>
+                                                            <small class="text-muted">
+                                                                🎂 {{ $customer->birth_date->format('d M Y') }}
+                                                            </small>
+                                                        </div>
+                                                        <i class="fas fa-birthday-cake fa-2x text-warning"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+
+                    </div>
+
         </section>
         <!-- /.content -->
     </div>

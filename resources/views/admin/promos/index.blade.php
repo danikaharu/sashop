@@ -58,7 +58,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td style="max-width:110px">
                                                     @if(!$promo->product->productpictures->isEmpty())
-                                                        <img src="{{ 'storage/'.$promo->product->productpictures[0]->url }}" alt="" style="width: 70%">    
+                                                        <img src="{{ 'storage/'.$promo->product->productpictures[0]->url }}" alt="" style="width: 70%">
                                                     @endif
                                                 </td>
                                                 <td>{{ $promo->product->productname }}</td>

@@ -413,7 +413,7 @@ ul {
     right: 20px;
 }
 .home_banner_area {
-    background: url(../img/banner/banner.png) no-repeat center bottom;
+    background: url(../img/banner/banner-fix.png) no-repeat center bottom;
     background-size: cover;
     position: relative;
     z-index: 1;

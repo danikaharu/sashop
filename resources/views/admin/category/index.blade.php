@@ -30,6 +30,13 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
+                        @elseif (@session()->has('errors'))
+                            <div class="alert alert-success fade show mb-2" role="alert">
+                                {{ session()->get('errors') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                         @endif
                     </div>
                     <div class="col-12">

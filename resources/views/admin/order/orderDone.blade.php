@@ -61,12 +61,12 @@
                                                     @if($d->status == "Berhasil")
                                                         <span class="badge badge-primary">Berhasil</span>
                                                     @endif
-                                                    
+
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('order.show',$d->id)  }}"
-                                                        class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-pen"></i> Edit
+                                                        class="btn btn-warning btn-sm">
+                                                        <i class="fas fa-eye"></i> Lihat
                                                     </a>
                                                 </td>
                                             </tr>

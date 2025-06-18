@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
- 
+
 
 class CartController extends Controller
 {
@@ -74,7 +74,7 @@ class CartController extends Controller
         $productCart = Cart::with(['product.promo'=> function ($builder) {
             $builder->where('startdate', '<=', Carbon::now())->where('enddate', '>=', Carbon::now());
         }, 'customer.user'])->get();
-        
+
         $productQtys = $request->input('product_qty');
         // dd($productQtys);
 
@@ -125,7 +125,7 @@ class CartController extends Controller
     public function store(Request $request, )
     {
 
-        
+
         $customerId = Customer::where('user_id',$request->user()->id)->first();
 
         function generateInvoiceNumber()
@@ -138,12 +138,12 @@ class CartController extends Controller
         $invoiceNumber = generateInvoiceNumber();
 
         DB::transaction(function () use($customerId, $invoiceNumber, $request) {
-            
+
             $transactions = Transaction::create([
                 'customer_id' => $customerId->id,
                 'numinvoice' => $invoiceNumber
             ]);
-    
+
             foreach($request->qty as $key => $value)
             {
                 DetailsTransaction::create([
@@ -152,14 +152,14 @@ class CartController extends Controller
                     'qty' => $value,
                     'price' => $request->price[$key]
                 ]);
-            }   
-    
-    
+            }
+
+
             Cart::where('customer_id',$customerId->id)->delete();
         });
 
-            
-        
+
+
         return redirect()->route('detailsOrder');
 
 
@@ -184,7 +184,7 @@ class CartController extends Controller
         //
     }
 
-    
+
 
     /**
      * Display the specified resource.
@@ -213,8 +213,22 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cart $cart)
+    // public function destroy(Cart $cart)
+    // {
+    //     dd($cart);
+    //     // Mencari item keranjang berdasarkan ID dan menghapusnya
+    //     $cart = Cart::findOrFail($id);
+    //     $cart->delete();
+
+    //     // Redirect kembali ke halaman cart dengan pesan sukses
+    //     return redirect()->route('carts')->with('success', 'Item berhasil dihapus dari keranjang.');
+    // }
+
+    public function hapusCart($id)
     {
-        //
+        $cart = Cart::findOrFail($id);
+        $cart->delete();
+
+        return redirect()->route('carts');
     }
 }

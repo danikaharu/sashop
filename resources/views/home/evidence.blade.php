@@ -1,88 +1,175 @@
-    @extends('layouts.homelayout')
-    @section('content')
-        <!--================Home Banner Area =================-->
-        <section class="banner_area">
-            <div class="banner_inner d-flex align-items-center">
-                <div class="container">
-                    <div class="banner_content d-md-flex justify-content-between align-items-center">
-                        <div class="mb-3 mb-md-0">
-                            <h2>Periksa Pembayaran</h2>
-                            <p>Dikit lagi!</p>
-                        </div>
-                        <div class="page_link">
-                            <a href="index.html">Home</a>
-                            <a href="checkout.html">Product Final Checkout</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!--================End Home Banner Area =================-->
+@extends('layouts.homelayout')
+@section('content')
+    @if (session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
 
-        <!--================Checkout Area =================-->
-        <section class="checkout_area section_gap">
+    @if (session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+        <div class="banner_inner d-flex align-items-center">
             <div class="container">
-                <div class="billing_details">
-                    <div class="row">
-                        <div class="col-lg-8 col-md-7 col-sm-12">
-                            <div class="payment-info mb-4">
-                                <h4 class="mb-3">Informasi Pembayaran</h4>
-                                <ul class="list-group">
-                                    <li class="list-group-item d-flex align-items-center">
-                                        <div class="bank-logo mr-3" style="width: 10%">
-                                            <img src="{{ asset('asset/mirashop.png') }}" alt="Bank ABC" class="img-fluid">
-                                        </div>
-                                        <div>
-                                            <strong>Bank ABC</strong>
-                                            <p class="mb-0">Nama Pemilik: John Doe</p>
-                                            <span>1234567890</span>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex align-items-center">
-                                        <div class="bank-logo mr-3" style="width: 10%">
-
-                                            <img src="{{ asset('asset/mirashop.png') }}" alt="Bank ABC" class="img-fluid">
-
-                                        </div>
-                                        <div>
-                                            <strong>Bank XYZ</strong>
-                                            <p class="mb-0">Nama Pemilik: Jane Smith</p>
-                                            <span>0987654321</span>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex align-items-center">
-                                        <div class="bank-logo mr-3" style="width: 10%">
-                                            <img src="{{ asset('asset/mirashop.png') }}" alt="Bank ABC" class="img-fluid">
-                                        </div>
-                                        <div>
-                                            <strong>Bank PQR</strong>
-                                            <p class="mb-0">Nama Pemilik: Michael Johnson</p>
-                                            <span>5555555555</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </div>
-                        <div class="col-lg-4 col-md-5 col-sm-12 mt-4">
-                            <form action="{{ route('detailsOrder.store') }}" enctype="multipart/form-data" method="POST">
-                                @csrf
-                                <div class="form-box">
-                                    <input type="hidden" name="transaction_id" value="{{ $transaction_id }}">
-                                    <h4 class="mb-3 mt-4">Bukti Pembayaran</h4>
-                                    <form>
-                                        <div class="form-group">
-                                            <input type="file" name="url" class="form-control-file"
-                                                id="payment-proof">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary main_btn">Kirim</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </form>
+                <div class="banner_content d-md-flex justify-content-between align-items-center">
+                    <div class="mb-3 mb-md-0">
+                        <h2>Periksa Pembayaran</h2>
+                        <a href="{{ route('detailsOrder') }}" class="btn btn-sm btn-primary">
+                            <i class="ti-arrow-left me-2"></i> Kembali
+                        </a>
+                    </div>
+                    <div class="page_link">
+                        <a href="index.html">Home</a>
+                        <a href="checkout.html">Product Final Checkout</a>
                     </div>
                 </div>
             </div>
-        </section>
-        <!--================End Checkout Area =================-->
-    @endsection
+        </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+    <section class="checkout_area section_gap">
+        <div class="container">
+            <div class="billing_details">
+                <div class="row">
+                    <!-- Informasi Detail Transaksi -->
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <h4 class="mb-3">Detail Transaksi</h4>
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Kode Barang</th>
+                                    <th>Berat</th>
+                                    <th>Kategori</th>
+                                    <th>Sub Kategori</th>
+                                    <th>Jumlah</th>
+                                    <th>Harga Satuan</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $totalPrice = 0;
+                                    $userPoints = auth()->user()->customer->point->points ?? 0;
+                                    $maxDiscount = floor($userPoints / 100) * 10; // Diskon maksimal berdasarkan poin
+                                    $discount = $maxDiscount > 100 ? 100 : $maxDiscount; // Maks diskon adalah 100%
+                                @endphp
+                                @foreach ($transaction->detailtransaction as $detail)
+                                    <tr>
+                                        <td>{{ $detail->product->productname }}</td>
+                                        <td>{{ $detail->product->productcode }}</td>
+                                        <td>{{ $detail->product->productweight }}</td>
+                                        <td>{{ $detail->product->subcategory->category->name }}</td>
+                                        <td>{{ $detail->product->subcategory->name }}</td>
+                                        <td>{{ $detail->qty }}</td>
+                                        <td>Rp {{ number_format($detail->price, 0, ',', '.') }}</td>
+                                        <td>Rp {{ number_format($detail->qty * $detail->price, 0, ',', '.') }}</td>
+                                    </tr>
+                                    @php
+                                        $totalPrice += $detail->qty * $detail->price;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="7" class="text-right"><strong>Total Harga (sudah termasuk diskon
+                                            produk)</strong></td>
+                                    <td><strong>Rp. {{ number_format($totalPrice, 0, ',', '.') }}</strong></td>
+                                </tr>
+
+                                @if ($birthdayDiscountPercent > 0)
+                                    <tr>
+                                        <td colspan="7" class="text-right"><strong>Diskon Ulang Tahun</strong></td>
+                                        <td>{{ $birthdayDiscountPercent }}%</td>
+                                    </tr>
+                                @endif
+
+                                @if ($usePoints == 'true')
+                                    <tr>
+                                        <td colspan="7" class="text-right"><strong>Diskon Poin</strong></td>
+                                        <td>{{ $pointsDiscountPercent }}%</td>
+                                    </tr>
+                                @endif
+
+                                <tr>
+                                    <td colspan="7" class="text-right"><strong>Total Setelah Diskon</strong></td>
+                                    <td><strong>Rp. {{ number_format($totalAfterDiscount, 0, ',', '.') }}</strong></td>
+                                </tr>
+
+                            </tfoot>
+                        </table>
+
+                        <div class="form-check mb-3">
+                            <input type="checkbox" {{ $usePoints ? 'checked' : '' }} class="form-check-input"
+                                id="use-points">
+                            <label for="use-points" class="form-check-label">Gunakan poin untuk diskon</label>
+                        </div>
+
+                        <div class="form-box">
+                            <button class="btn btn-primary btn-block" id="pay-button">Bayar Sekarang</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection
+
+@push('script')
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
+    </script>
+
+    <script type="text/javascript">
+        document.getElementById('pay-button').onclick = function() {
+            const usePoints = {{ $usePoints ? 'true' : 'false' }};
+            const totalAfterDiscount = {{ $totalAfterDiscount }};
+            const discount = {{ $discount }};
+
+            snap.pay('{{ $transaction->snap_token }}', {
+                onSuccess: function(result) {
+                    // Kirim status penggunaan poin ke backend
+                    window.location.href = "{{ route('paymentSuccess', ['id' => $transaction->id]) }}" +
+                        "?use_points=" + (usePoints ? 1 : 0) + "&total_after_discount=" +
+                        totalAfterDiscount + "&discount=" + discount;
+
+                },
+                onPending: function(result) {
+                    console.log('Pending:', result);
+                },
+                onError: function(result) {
+                    console.log('Error:', result);
+                }
+            });
+        };
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#use-points').change(function() {
+                // const totalPrice = {{ $totalPrice }};
+                // const userPoints = {{ auth()->user()->customer->point->points ?? 0 }};
+                // const maxDiscount = Math.floor(userPoints / 100) * 10; // Maks diskon berdasarkan poin
+                // const discount = maxDiscount > 100 ? 100 : maxDiscount; // Diskon maksimal 100%
+                // const totalAfterDiscount = totalPrice - (totalPrice * discount / 100);
+
+                if ($(this).is(':checked')) {
+                    // Tambahkan query parameter untuk use-points
+                    window.location.href = "{{ route('detailsOrder.show', ['id' => $transaction->id]) }}" +
+                        "?use_points=true";
+                } else {
+                    window.location.href = "{{ route('detailsOrder.show', ['id' => $transaction->id]) }}";
+                }
+            });
+        });
+    </script>
+@endpush

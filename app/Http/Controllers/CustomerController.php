@@ -16,7 +16,7 @@ class CustomerController extends Controller
     {
         $customer = Customer::with('user')->latest()->get();
 
-        return view('admin.usersCustomer.index',[
+        return view('admin.usersCustomer.index', [
             'customers' => $customer
         ]);
     }
@@ -33,7 +33,6 @@ class CustomerController extends Controller
         return view('admin.usersCustomer.createForm', [
             'customers' => $customer
         ]);
-
     }
 
     /**
@@ -46,9 +45,9 @@ class CustomerController extends Controller
 
         $validator = $request->validate([
             'name' => ['required', 'string'],
-            'email' => ['email', 'required','unique:users,email'],
+            'email' => ['email', 'required', 'unique:users,email'],
             'password' => ['required', 'min:8'],
-            'phone' => ['required','string'],
+            'phone' => ['required', 'string'],
             'address' => ['required', 'string']
         ]);
 
@@ -65,9 +64,7 @@ class CustomerController extends Controller
             'address' => $validator['address']
         ]);
 
-        return redirect()->route('customer.index')->with('success','Customer Berhasil Ditambahkan');
-
-
+        return redirect()->route('customer.index')->with('success', 'Customer Berhasil Ditambahkan');
     }
 
     /**
@@ -85,7 +82,7 @@ class CustomerController extends Controller
     {
         $customer = Customer::with('user')->find($id);
 
-        return view('admin.usersCustomer.editForm',[
+        return view('admin.usersCustomer.editForm', [
             'customers' => $customer,
         ]);
     }
@@ -119,13 +116,12 @@ class CustomerController extends Controller
 
 
         return redirect()->route('customer.index')->with('success', 'Customer Berhasil Diedit!');
-        
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer,$id)
+    public function destroy(Customer $customer, $id)
     {
         $customer = Customer::with('user')->find($id);
 
@@ -134,6 +130,5 @@ class CustomerController extends Controller
         $customer->user->delete();
 
         return redirect()->route('customer.index')->with('success', 'Customer Berhasil Dihapus');
-
     }
 }

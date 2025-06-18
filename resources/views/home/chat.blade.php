@@ -16,6 +16,7 @@
 
         .user-chat {
             background-color: #c1e2b3;
+            color: rgb(34, 34, 34);
 
             align-self: flex-start;
         }
@@ -67,9 +68,10 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-7 col-sm-12">
                         <div class="order_box">
-                            <h2 class="mb-4">Chat Kamu</h2>
-                            <button onclick="reloadPage()" class="btn btn-primary mb-3">
-                                <i class="fas fa-sync-alt"></i> <!-- Refresh Icon -->
+                            <p>Halo Semua!</p>
+                            <h2 class="mb-4">Admin</h2>
+                            <button onclick="reloadPage()" style="background-color: #888; color:white" class="btn  mb-3">
+                                <i style="background-color: #888" class="fas fa-sync-alt">Refresh</i> <!-- Refresh Icon -->
                             </button>
                             <div id="chat-box" class="chat-container">
                                 <!-- Container to display messages -->

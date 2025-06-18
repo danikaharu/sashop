@@ -94,8 +94,8 @@
 <body>
     <div id="particles-js"></div>
     <div class="login-container" id="loginContainer">
-        <img src="asset/mirashop.png" alt="Logo" class="img-fluid logo-img">
-        <h2>Login</h2>
+        <img src="asset/logoFic.jpg" alt="Logo" class="img-fluid logo-img">
+        <h2>register</h2>
         <form action="{{ route('doRegis') }}" method="POST">
             @csrf
             <div class="form-group">
@@ -120,6 +120,13 @@
                 @enderror
             </div>
             <div class="form-group">
+                <label for="birth_date">Tanggal Lahir</label>
+                <input type="date" class="form-control" id="birth_date" name="birth_date" placeholder="Enter date">
+                @error('birth_date')
+                    <small class="text text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+            <div class="form-group">
                 <label for="phone">Nomor Telepon</label>
                 <input type="tel" class="form-control" id="phone" name="phone"
                     placeholder="Enter phone number">
@@ -131,16 +138,16 @@
             <div class="form-group">
                 <label for="address">Alamat</label>
                 <textarea class="form-control" id="address" name="address" placeholder="Enter your address" rows="3"></textarea>
-                 @error('address')
+                @error('address')
                     <small class="text text-danger">{{ $message }}</small>
                 @enderror
             </div>
 
-            <button type="submit" class="btn btn-custom btn-block">Login</button>
+            <button type="submit" class="btn btn-custom btn-block">Daftar</button>
         </form>
         <div class="div mt-4 text-center">
-            <small>Belum Punya Akun ?</small> <br>
-            <a href="#" class="register-link">Daftar Disini Dulu Dong!</a>
+            <small>Sudah Punya Akun ?</small> <br>
+            <a href="{{ route('login') }}" class="register-link">Login Disini!</a>
         </div>
     </div>
 

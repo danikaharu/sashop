@@ -45,7 +45,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="discount">Discount</label>
+                                        <label for="discount">Discount </label>
+                                        <span class="text-muted text-red">(1-100)</span>
                                         <input type="number" class="form-control" id="discount" name="discount"
                                             value="{{ old('discount') }}" placeholder="Masukan Discount">
                                     </div>
@@ -145,7 +146,5 @@
                 console.log('End Date:', endDate);
             });
         });
-
-        
     </script>
 @endsection

@@ -36,7 +36,12 @@ class HomeController extends Controller
 
         // Default: jika belum login, tampilkan produk terlaris umum
         $recommendedProducts = Product::with('productpictures')
-            ->select('products.*', DB::raw('SUM(details_transactions.qty) as total_sold'))
+            ->select(
+                'products.id',
+                'products.productname',
+                'products.productpictures',
+                DB::raw('SUM(details_transactions.qty) as total_sold')
+            )
             ->leftJoin('details_transactions', 'products.id', '=', 'details_transactions.product_id')
             ->groupBy('products.id')
             ->inRandomOrder()

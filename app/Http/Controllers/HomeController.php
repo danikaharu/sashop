@@ -42,7 +42,7 @@ class HomeController extends Controller
                 DB::raw('SUM(details_transactions.qty) as total_sold')
             )
             ->leftJoin('details_transactions', 'products.id', '=', 'details_transactions.product_id')
-            ->groupBy('products.id')
+            ->groupBy('products.id', 'products.productname')
             ->inRandomOrder()
             ->limit(4)
             ->get();

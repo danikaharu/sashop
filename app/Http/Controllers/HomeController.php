@@ -39,7 +39,6 @@ class HomeController extends Controller
             ->select(
                 'products.id',
                 'products.productname',
-                'products.productpictures',
                 DB::raw('SUM(details_transactions.qty) as total_sold')
             )
             ->leftJoin('details_transactions', 'products.id', '=', 'details_transactions.product_id')

@@ -52,7 +52,7 @@ class HomeController extends Controller
             // Ambil produk yang pernah dibeli user
             $purchasedProductIds = DB::table('details_transactions')
                 ->join('transactions', 'details_transactions.transaction_id', '=', 'transactions.id')
-                ->where('transactions.user_id', $user->id)
+                ->where('transactions.customer_id', $user->id)
                 ->pluck('details_transactions.product_id');
 
             // Ambil kategori dari produk-produk tersebut

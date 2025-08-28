@@ -44,7 +44,7 @@ class HomeController extends Controller
             ->leftJoin('details_transactions', 'products.id', '=', 'details_transactions.product_id')
             ->groupBy('products.id', 'products.productname')
             ->inRandomOrder()
-            ->limit(4)
+            ->limit(6)
             ->get();
 
         // Jika user login dan punya histori pembelian
@@ -67,7 +67,7 @@ class HomeController extends Controller
                     ->whereNotIn('products.id', $purchasedProductIds)
                     ->groupBy('products.id')
                     ->inRandomOrder()
-                    ->limit(4)
+                    ->limit(6)
                     ->get();
             }
         }

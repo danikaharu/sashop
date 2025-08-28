@@ -88,7 +88,7 @@
                     <h3 class="text-uppercase mb-40">Rekomendasi Untukmu</h3>
                     <div class="row justify-content-center">
                         @foreach ($recommendedProducts as $product)
-                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
                                 <div class="single-new-product">
                                     <div class="product-image">
                                         <img src="{{ $product->productpictures->first() ? asset('storage/' . $product->productpictures->first()->url) : asset('asset/logoFic.jpg') }}"

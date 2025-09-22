@@ -140,6 +140,7 @@
             position: relative;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+            height: 100%;
         }
 
         .single-new-product:hover {

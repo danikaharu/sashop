@@ -26,7 +26,7 @@ class ChatController extends Controller
             ->orderBy('date', 'asc')
             ->get()
             ->map(function ($msg) {
-                $msg->isAdmin = !is_null($msg->admin_id);
+                $msg->isAdmin = $msg->isAdmin == 1 ? true : false; // pastikan boolean
                 return $msg;
             });
 
@@ -43,14 +43,12 @@ class ChatController extends Controller
             ->orderBy('date', 'asc')
             ->get()
             ->map(function ($msg) {
-                $msg->isAdmin = $msg->isAdmin == 1 ? true : false;
-
+                $msg->isAdmin = $msg->isAdmin == 1 ? true : false; // sama dengan chat_user
                 return $msg;
             });
 
         return response()->json($messages);
     }
-
 
     public function getConversation($userId)
     {

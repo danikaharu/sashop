@@ -68,8 +68,19 @@ class ChatController extends Controller
             ->orderBy('id', 'asc')
             ->get();
 
-        return response()->json($messages);
+        // pastikan frontend dapat data dengan flag isAdmin yg jelas
+        $result = $messages->map(function ($m) {
+            return [
+                'id' => $m->id,
+                'msg' => $m->msg,
+                'date' => Carbon::parse($m->date)->format('H:i'),
+                'isAdmin' => (bool) $m->isAdmin, // ambil dari kolom
+            ];
+        });
+
+        return response()->json($result);
     }
+
 
     public function index()
     {

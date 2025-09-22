@@ -81,25 +81,26 @@
     <!--================ End Promo Product Slider =================-->
 
     <!--================ Recommended Products =================-->
-    <section class="recommended_product_area mb-5">
+    <section class="new_product_area mb-40">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-12 text-center">
-                    <h3 class="text-uppercase mb-40">Rekomendasi Untukmu</h3>
-                    <div class="row justify-content-center">
-                        @foreach ($recommendedProducts as $product)
-                            <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
-                                <div class="single-new-product">
-                                    <div class="product-image">
-                                        <img src="{{ $product->productpictures->first() ? asset('storage/' . $product->productpictures->first()->url) : asset('asset/logoFic.jpg') }}"
-                                            alt="{{ $product->productname }}">
+                    <div class="new_product_content">
+                        <h3 class="text-uppercase mb-40">Rekomendasi Untukmu</h3>
+                        <div class="new-products d-flex justify-content-center gap-3">
+                            @foreach ($recommendedProducts as $product)
+                                <a href="{{ route('showProducts', ['id' => $product->id]) }}"
+                                    class="single-new-product-link">
+                                    <div class="single-new-product">
+                                        <div class="product-image">
+                                            <img src="{{ $product->productpictures->isNotEmpty() ? 'storage/' . $product->productpictures->first()?->url : asset('asset/logoFic.jpg') }}"
+                                                alt="{{ $product->productname }}">
+                                        </div>
+                                        <h5 class="product-name mt-3">{{ $product->productname }}</h5>
                                     </div>
-                                    <h5 class="product-name mt-3">{{ Str::limit($product->productname, 40) }}</h5>
-                                    <a href="{{ route('showProducts', ['id' => $product->id]) }}"
-                                        class="main_btn mt-3">Lihat Produk</a>
-                                </div>
-                            </div>
-                        @endforeach
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>

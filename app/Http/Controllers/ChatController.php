@@ -20,13 +20,19 @@ class ChatController extends Controller
     public function chat_user()
     {
         $user = Auth::user();
+
         $messages = Message::where('user_id', $user->id)
             ->orWhere('customer_id', $user->customer->id)
             ->orderBy('date', 'asc')
-            ->get();
+            ->get()
+            ->map(function ($msg) {
+                $msg->isAdmin = !is_null($msg->admin_id);
+                return $msg;
+            });
 
         return response()->json($messages);
     }
+
 
     public function chat_user_id($id)
     {

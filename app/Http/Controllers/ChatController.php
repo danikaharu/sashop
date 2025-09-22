@@ -31,13 +31,20 @@ class ChatController extends Controller
     public function chat_user_id($id)
     {
         $user = User::find($id);
+
         $messages = Message::where('user_id', $user->id)
             ->orWhere('customer_id', $user->customer->id)
             ->orderBy('date', 'asc')
-            ->get();
+            ->get()
+            ->map(function ($msg) {
+                $msg->isAdmin = $msg->isAdmin == 1 ? true : false;
+
+                return $msg;
+            });
 
         return response()->json($messages);
     }
+
 
     public function getConversation($userId)
     {

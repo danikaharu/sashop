@@ -149,6 +149,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::post('/chat/{id}', [ChatController::class, 'submit'])->name('chat.post');
     Route::get('admin/detail/{userId}', [ChatController::class, 'getConversation'])->name('chat.conversation');
+    Route::get('/admin/chat/{user}/messages', [ChatController::class, 'fetchMessages'])->name('chat.messages');
 
 
     // EDIT BIODATA

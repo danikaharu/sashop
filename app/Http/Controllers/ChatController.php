@@ -53,7 +53,22 @@ class ChatController extends Controller
             'users' => Customer::all(),
         ];
         return view('admin.usersCustomer.chat_detail', $data);
+    }
 
+    public function fetchMessages($userId, Request $request)
+    {
+        $user = User::findOrFail($userId);
+        $lastId = $request->get('last_id', 0);
+
+        $messages = Message::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->orWhere('customer_id', $user->customer->id);
+        })
+            ->where('id', '>', $lastId)
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return response()->json($messages);
     }
 
     public function index()
@@ -91,6 +106,4 @@ class ChatController extends Controller
         // Jika menggunakan Ajax, kembalikan respons dalam format JSON
         return response()->json(['message' => 'Pesan berhasil dikirim'], 200);
     }
-
-
 }

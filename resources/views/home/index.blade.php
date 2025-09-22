@@ -60,7 +60,8 @@
                                     <div class="single-promo text-center p-3">
                                         @foreach ($product->promo as $discount)
                                             <div class="promo-discount mb-3">
-                                                <h2 class="text-uppercase">{{ $discount->promo_discount }}%</h2>
+                                                <h2 class="text-uppercase">
+                                                    {{ number_format($discount->promo_discount, 0) }}%</h2>
                                             </div>
                                         @endforeach
                                         <p class="mb-3">Limited Time Offer</p>

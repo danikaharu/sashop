@@ -121,14 +121,25 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer, $id)
+    public function destroy($id)
     {
-        $customer = Customer::with('user')->find($id);
+        $customer = Customer::with('user')->findOrFail($id);
 
+        // cek apakah masih punya messages
+        if ($customer->messages()->exists()) {
+            return redirect()->route('customer.index')
+                ->with('error', 'Customer tidak bisa dihapus karena masih memiliki pesan.');
+        }
+
+        // hapus customer
         $customer->delete();
 
-        $customer->user->delete();
+        // hapus user terkait
+        if ($customer->user) {
+            $customer->user->delete();
+        }
 
-        return redirect()->route('customer.index')->with('success', 'Customer Berhasil Dihapus');
+        return redirect()->route('customer.index')
+            ->with('success', 'Customer berhasil dihapus.');
     }
 }

@@ -31,6 +31,14 @@
                                 </button>
                             </div>
                         @endif
+                        @if (@session()->has('error'))
+                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                {{ session()->get('error') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-12">
                         <div class="card">
@@ -60,7 +68,7 @@
                                                 <td>{{ $user->user->email }}</td>
                                                 <td>{{ $user->phone }}</td>
                                                 <td>{{ $user->address }}</td>
-                                                <td>{{ (new \Carbon\Carbon($user->created_at))->format('d F Y') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d F Y') }}</td>
                                                 <td>
                                                     <a href="{{ route('customer.edit', $user->id) }}"
                                                         class="btn btn-primary btn-sm">

@@ -31,4 +31,9 @@ class Customer extends Model
     {
         return $this->hasOne(Point::class)->withDefault(['points' => 0]);
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }

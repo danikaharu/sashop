@@ -184,9 +184,19 @@ class DetailsTransactionController extends Controller
         $user = auth()->user();
         $birthday = $user->customer->birth_date ? date('m-d', strtotime($user->customer->birth_date)) : null;
         $today = now()->format('m-d');
+
         if ($birthday === $today) {
-            $birthdayDiscountPercent = 10; // misal 10%
-            $totalPrice -= ($totalPrice * $birthdayDiscountPercent / 100);
+            // cek apakah sudah ada transaksi lain hari ini
+            $alreadyUsedBirthdayDiscount = Transaction::where('customer_id', $user->customer->id)
+                ->whereDate('created_at', now()->toDateString())
+                ->where('id', '!=', $transaction->id) // kecualikan transaksi yg sedang diproses
+                ->exists();
+
+            // Jika belum ada transaksi lain hari ini → kasih diskon
+            if (!$alreadyUsedBirthdayDiscount) {
+                $birthdayDiscountPercent = 10;
+                $totalPrice -= ($totalPrice * $birthdayDiscountPercent / 100);
+            }
         }
 
         // Diskon poin

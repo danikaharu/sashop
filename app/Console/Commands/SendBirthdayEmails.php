@@ -36,9 +36,13 @@ class SendBirthdayEmails extends Command
             $query->whereRaw("DATE_FORMAT(birth_date, '%m-%d') = ?", [$today]);
         })->get();
 
-        foreach ($users as $user) {
-            ProcessBirthdayEmail::dispatch($user)->onQueue('birthday-email');
+        if ($users->isEmpty()) {
+            $this->info("Tidak ada user yang ulang tahun hari ini.");
+        } else {
+            foreach ($users as $user) {
+                ProcessBirthdayEmail::dispatch($user)->onQueue('birthday-email');
+                $this->info("Job email ulang tahun dikirim ke: {$user->email}");
+            }
         }
-        $this->info("Email dikirim ke: {$user->email}");
     }
 }
